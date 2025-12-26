@@ -4,6 +4,7 @@ from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 from functools import wraps
+import re
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # --------
@@ -76,7 +77,7 @@ user_args.add_argument('password_confirm', type=str, required=True, help="Confir
 
 userFields = {
     'id':fields.Integer,
-    'username':fields.String,
+    'username':fields.String
 }
 
 class Register(Resource):
@@ -316,8 +317,39 @@ class DeleteTask(Resource):
 api.add_resource(CreateTask, '/api/task/create/')
 api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time/')
 api.add_resource(ViewTask, '/api/task/<int:task_id>/')
-api.add_resource(ViewWeekTask, '/api/weeks/<int:week_id>/tasks')
-api.add_resource(DeleteTask, '/api/tasks/<int:task_id>')
+api.add_resource(ViewWeekTask, '/api/weeks/<int:week_id>/tasks/')
+api.add_resource(DeleteTask, '/api/tasks/<int:task_id>/')
+
+# -----------------
+#  Category Part
+# -----------------
+
+category_args = reqparse.RequestParser()
+category_args.add_argument('name', type=str, required=True, help="Name cannot be blank")
+category_args.add_argument('color', type=str, required=True, help="Color cannot be blank")
+
+categoryFields = {
+    'id':fields.Integer,
+    'name':fields.String,
+    'color':fields.String
+}
+
+class CreateCategory(Resource):
+    @login_required
+    @marshal_with(categoryFields)
+    def post(self):
+        # Add a category
+        user_id = session.get('user_id')
+        args = category_args.parse_args()
+        color = args['color']
+        if not re.match(r'^#([0-9a-fA-F]{6})$', color):
+            raise ValueError("Invalid color format")
+        category = CategoryModel(name=args['name'], color=color, user_id=user_id)
+        db.session.add(category)
+        db.session.commit()
+        return category
+    
+api.add_resource(CreateCategory, '/api/category/create/')
 
 # -------------------
 #  Call the Program
