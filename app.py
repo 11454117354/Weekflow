@@ -247,6 +247,9 @@ class CreateTask(Resource):
             ddl = datetime.fromisoformat(args['ddl'])
         except ValueError:
             abort(400, message="Invalid datetime format")
+        category = CategoryModel.query.filter_by(id=args['category_id'], user_id=user_id).first()
+        if not category:
+            abort(404, message="Category not found")
         task = TaskModel(
             title=args['title'],
             ddl=ddl,
@@ -297,9 +300,25 @@ class ViewWeekTask(Resource):
         #View tasks of a certain week
         user_id = session.get('user_id')
         week = WeekModel.query.get(week_id)
+        if not week:
+            abort(404, message="Week not found")
         if user_id != week.user_id:
-            abort(400, "The week not belong to the user")
+            abort(400, message="The week not belong to the user")
         tasks =  TaskModel.query.filter_by(week_id=week_id, user_id=user_id).order_by(TaskModel.ddl.asc()).all()
+        return tasks
+    
+class  ViewCategoryTask(Resource):
+    @login_required
+    @marshal_with(taskFields)
+    def get(self, category_id):
+        # View tasks from a certain category
+        user_id = session.get('user_id')
+        category = CategoryModel.query.get(category_id)
+        if not category:
+            abort(404, message="Category not found")
+        if user_id != category.user_id:
+            abort(400, message="The week not belong to the user")
+        tasks =  TaskModel.query.filter_by(category_id=category_id, user_id=user_id).order_by(TaskModel.ddl.asc()).all()
         return tasks
     
 class DeleteTask(Resource):
@@ -309,7 +328,7 @@ class DeleteTask(Resource):
         user_id = session.get('user_id')
         task = TaskModel.query.filter_by(id=task_id, user_id=user_id).first()
         if not task:
-            abort(404, "Task not found")
+            abort(404, message="Task not found")
         db.session.delete(task)
         db.session.commit()
         return {"message": "Task already deleted"}, 200
@@ -318,6 +337,7 @@ api.add_resource(CreateTask, '/api/task/create/')
 api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time/')
 api.add_resource(ViewTask, '/api/task/<int:task_id>/')
 api.add_resource(ViewWeekTask, '/api/weeks/<int:week_id>/tasks/')
+api.add_resource(ViewCategoryTask, '/api/categories/<int:category_id>/tasks/')
 api.add_resource(DeleteTask, '/api/tasks/<int:task_id>/')
 
 # -----------------
@@ -387,7 +407,7 @@ class DeleteCategory(Resource):
             abort(400, message="Destination id should not be negative")
         category = CategoryModel.query.filter_by(id=category_id, user_id=user_id).first()
         if not category:
-            abort(404, "Category not found")
+            abort(404, message="Category not found")
         db.session.delete(category)
         db.session.commit()
         return {"message": "Category has been deleted"}, 200

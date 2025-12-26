@@ -49,12 +49,11 @@ DELETE /api/weeks/delete
 
 POST /api/task/create
 - Create a new task in specific week
-- Default category_id is 0
     ```json
     {
         "title":"cs50 final project",
         "ddl":"2025-12-30T12:00:00",
-        "category_id":"0",
+        "category_id":"1",
         "remark":"",
         "week_id":"1"
     }
@@ -72,6 +71,9 @@ GET /api/tasks/<task_id>
 
 GET /api/weeks/<week_id>/tasks
 - Get tasks for a week
+
+GET /api/categories/<category_id>/tasks
+- Get tasks from a category
 
 DELETE /api/tasks/<task_id>
 - Delete a task
