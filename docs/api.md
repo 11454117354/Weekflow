@@ -84,5 +84,8 @@ POST /api/category/create
 GET /api/categories/<category_id>
 - Get info of a category
 
+GET /api/categories/all
+- Get info of all category
+
 DELETE /api/categories/<category_id>
 - Delete a category

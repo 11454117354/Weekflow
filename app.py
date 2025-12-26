@@ -349,7 +349,27 @@ class CreateCategory(Resource):
         db.session.commit()
         return category
     
+class ViewCategory(Resource):
+    @login_required
+    @marshal_with(categoryFields)
+    def get(self, category_id):
+        # Get info of a category
+        user_id = session.get('user_id')
+        category = CategoryModel.query.filter_by(id=category_id, user_id=user_id).first()
+        return category
+    
+class ViewAllCategory(Resource):
+    @login_required
+    @marshal_with(categoryFields)
+    def get(self):
+        # Get info of all categories
+        user_id = session.get('user_id')
+        categories = CategoryModel.query.filter_by(user_id=user_id).all()
+        return categories
+    
 api.add_resource(CreateCategory, '/api/category/create/')
+api.add_resource(ViewCategory, '/api/categories/<int:category_id>/')
+api.add_resource(ViewAllCategory, '/api/categories/all/')
 
 # -------------------
 #  Call the Program
