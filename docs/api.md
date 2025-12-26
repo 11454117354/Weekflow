@@ -49,3 +49,5 @@ POST /api/tasks
 
 GET /api/weeks/<week_id>/tasks
 - Get tasks for a week
+
+## Category

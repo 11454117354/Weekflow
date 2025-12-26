@@ -52,13 +52,18 @@ class TaskModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     ddl = db.Column(db.DateTime, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False) # YYYY-MM-DDTHH:MM:SS
-    end_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime, nullable=True) # YYYY-MM-DDTHH:MM:SS
+    end_time = db.Column(db.DateTime, nullable=True)
     category = db.Column(db.String(50), nullable=False)  
-    color = db.Column(db.String(7), nullable=False) # Hex
     remark = db.Column(db.String(200), nullable=True)
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
     week_id = db.Column(db.Integer, db.ForeignKey('week_model.id'), nullable=False)
+
+class CategoryModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    color = db.Column(db.String(7), nullable=False) # Hex
+    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
     
 # ----------------------
 #  User Authentication
@@ -124,9 +129,9 @@ api.add_resource(Login, '/api/login/')
 api.add_resource(Me, '/api/me/')
 api.add_resource(Logout, '/api/logout/')
 
-# --------------------
-#  Main Functionality
-# --------------------
+# ------------
+#  Week Part
+# ------------
 
 week_args = reqparse.RequestParser()
 week_args.add_argument('name', type=str, required=False, help="The name of the week")
@@ -185,9 +190,36 @@ class LastView(Resource):
             abort(404, message="not found")
         return {"last_week_id": user.last_week_id}
     
+class DeleteWeek(Resource):
+    @login_required
+    def delete(self, week_id):
+        # Delete week
+        user_id = session.get('user_id')
+        week = WeekModel.query.filter_by(id=week_id, user_id=user_id).first()
+        if not week:
+            abort(404, message="Week not found")
+        db.session.delete(week)
+        db.session.commit()
+        return {"message": "Week already been deleted"}, 200
+    
 api.add_resource(CreateWeek, '/api/week/create')
 api.add_resource(ViewWeek, '/api/weeks/<int:week_id>')
-api.add_resource(LastView, "/api/weeks/last")
+api.add_resource(LastView, '/api/weeks/last')
+api.add_resource(DeleteWeek, '/api/weeks/<int:week_id>')
+
+# ------------
+#  Task Part
+# ------------
+
+task_args = reqparse.RequestParser()
+task_args.add_argument('title', type=str, required=True, help="Title cannot be blank")
+task_args.add_argument('ddl', type=str, required=True, help="Deadline cannot be blank")
+task_args.add_argument('start_time', type=str, required=False, help="Enter the start time")
+task_args.add_argument('end_time', type=str, required=False, help="Enter the end time")
+task_args.add_argument('category', type=str, required=True, help="Category cannot be blank")
+task_args.add_argument('color', type=str, required=True, help="Color cannot be blank")
+
+
 
 
 # -------------------
