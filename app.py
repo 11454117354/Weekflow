@@ -202,10 +202,10 @@ class DeleteWeek(Resource):
         db.session.commit()
         return {"message": "Week already been deleted"}, 200
     
-api.add_resource(CreateWeek, '/api/week/create')
-api.add_resource(ViewWeek, '/api/weeks/<int:week_id>')
-api.add_resource(LastView, '/api/weeks/last')
-api.add_resource(DeleteWeek, '/api/weeks/<int:week_id>')
+api.add_resource(CreateWeek, '/api/week/create/')
+api.add_resource(ViewWeek, '/api/weeks/<int:week_id>/')
+api.add_resource(LastView, '/api/weeks/last/')
+api.add_resource(DeleteWeek, '/api/weeks/<int:week_id>/')
 
 # ------------
 #  Task Part
@@ -275,9 +275,19 @@ class SetTaskTime(Resource):
             abort(400, message="Invalid datetime format")
         db.session.commit()
         return task        
+    
+class ViewTask(Resource):
+    @login_required
+    @marshal_with(taskFields)
+    def get(self, task_id):
+        # View certain task info
+        user_id = session.get('user_id')
+        task = TaskModel.query.filter_by(id=task_id, user_id=user_id).first()
+        return task
 
-api.add_resource(CreateTask, '/api/task/create')
-api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time')
+api.add_resource(CreateTask, '/api/task/create/')
+api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time/')
+api.add_resource(ViewTask, '/api/task/<int:task_id>/')
 
 # -------------------
 #  Call the Program
