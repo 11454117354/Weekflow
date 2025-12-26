@@ -28,9 +28,7 @@ I wanted to create a tool that fits my owm study habits: managing deadlines and 
     pip install -r requirements.txt
 3. Initialize the database:
     ```bash
-    flask db init    
-    flask db migrate
-    flask db upgrade
+    python3 ./create_db.py
 4. Run the application:
     ```bash
     flask run
