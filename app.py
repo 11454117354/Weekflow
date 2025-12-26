@@ -285,9 +285,22 @@ class ViewTask(Resource):
         task = TaskModel.query.filter_by(id=task_id, user_id=user_id).first()
         return task
 
+class ViewWeekTask(Resource):
+    @login_required
+    @marshal_with(taskFields)
+    def get(self, week_id):
+        #View tasks of a certain week
+        user_id = session.get('user_id')
+        week = WeekModel.query.get(week_id)
+        if user_id != week.user_id:
+            abort(400, "The week not belong to the user")
+        tasks =  TaskModel.query.filter_by(week_id=week_id, user_id=user_id).order_by(TaskModel.ddl.asc()).all()
+        return tasks
+
 api.add_resource(CreateTask, '/api/task/create/')
 api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time/')
 api.add_resource(ViewTask, '/api/task/<int:task_id>/')
+api.add_resource(ViewWeekTask, '/api/weeks/<int:week_id>/tasks')
 
 # -------------------
 #  Call the Program
