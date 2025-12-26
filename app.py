@@ -54,10 +54,10 @@ class TaskModel(db.Model):
     ddl = db.Column(db.DateTime, nullable=False)
     start_time = db.Column(db.DateTime, nullable=True) # YYYY-MM-DDTHH:MM:SS
     end_time = db.Column(db.DateTime, nullable=True)
-    category = db.Column(db.String(50), nullable=False)  
     remark = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
     week_id = db.Column(db.Integer, db.ForeignKey('week_model.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category_model.id'), nullable=False)
 
 class CategoryModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -216,11 +216,45 @@ task_args.add_argument('title', type=str, required=True, help="Title cannot be b
 task_args.add_argument('ddl', type=str, required=True, help="Deadline cannot be blank")
 task_args.add_argument('start_time', type=str, required=False, help="Enter the start time")
 task_args.add_argument('end_time', type=str, required=False, help="Enter the end time")
-task_args.add_argument('category', type=str, required=True, help="Category cannot be blank")
-task_args.add_argument('color', type=str, required=True, help="Color cannot be blank")
+task_args.add_argument('category_id', type=str, required=True, help="Category cannot be blank")
+task_args.add_argument('remark', type=str, required=False, help="Enter remark")
+task_args.add_argument('week_id', type=str, required=True, help="Week id cannot be blank")
 
+taskFields = {
+    'id':fields.Integer,
+    'title':fields.String,
+    'ddl':fields.String,
+    'start_time':fields.String,
+    'end_time':fields.String,
+    'category_id':fields.Integer,
+    'remark':fields.String,
+    'week_id':fields.Integer
+}
 
+class CreateTask(Resource):
+    @login_required
+    @marshal_with(taskFields)
+    def post(self):
+        # Create a task
+        user_id = session.get('user_id')
+        args = task_args.parse_args()
+        try:
+            ddl = datetime.fromisoformat(args['ddl'])
+        except ValueError:
+            abort(400, message="Invalid datetime format")
+        task = TaskModel(
+            title=args['title'],
+            ddl=ddl,
+            category_id=args['category_id'],
+            remark=args['remark'],
+            week_id=args['week_id'],
+            user_id=user_id
+        )
+        db.session.add(task)
+        db.session.commit()
+        return task, 201
 
+api.add_resource(CreateTask, '/api/task/create')
 
 # -------------------
 #  Call the Program

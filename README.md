@@ -34,6 +34,7 @@ I wanted to create a tool that fits my owm study habits: managing deadlines and 
 5. Open the browser at http://127.0.0.1:5000
    
 ## Future Improvememts
+- Change username, week name, password.etc
 - Auto-delaying for unfinished work to the next week
 - iOS client using the same API
 - Visually-appealing calender with task blocks and class schedule

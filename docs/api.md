@@ -6,7 +6,7 @@ POST /api/register
 - Get users registered
     ```json
     {
-        "username": "096",
+        "username": "chen",
         "password": "1",
         "password_confirm": "1"
     }
@@ -42,12 +42,34 @@ GET /api/weeks/<week_id>
 GET /api/weeks/last
 - Get the last week the user has ever viewed
 
+DELETE /api/weeks/delete
+
 ## Tasks
 
-POST /api/tasks
+POST /api/task/create
 - Create a new task in specific week
+    ```json
+    {
+        "title":"cs50 final project",
+        "ddl":"2025-12-30T12:00:00",
+        "category_id":"1",
+        "remark":"",
+        "week_id":"1"
+    }
+
+PUT /api/task/time
+
+GET /api/tasks/<task_id>
 
 GET /api/weeks/<week_id>/tasks
 - Get tasks for a week
 
+DELETE /api/tasks/<task_id>
+
 ## Category
+
+POST /api/category/create
+
+GET /api/categories/<category_id>
+
+DELETE /api/categories/<category_id>
