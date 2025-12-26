@@ -39,6 +39,10 @@ POST /api/week/create
 GET /api/weeks/<week_id>
 - Get specific week name and info
 
+GET /api/weeks/all
+- Get all weeks name and info
+
+
 GET /api/weeks/last
 - Get the last week the user has ever viewed
 

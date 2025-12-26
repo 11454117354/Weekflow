@@ -181,6 +181,22 @@ class ViewWeek(Resource):
         db.session.commit()
         return week
     
+class ViewWeekAll(Resource):
+    @login_required
+    @marshal_with(weekFields)
+    def get(self):
+        # Get all weeks info
+        user_id = session.get('user_id')
+        weeks = WeekModel.query.filter_by(user_id=user_id).all()
+        if not weeks:
+            abort(404, message="Week not found")
+        # Remember "lastly_view"
+        week = WeekModel.query.filter_by(user_id=user_id).order_by(WeekModel.start_time.asc()).first()
+        user = UserModel.query.get(user_id)
+        user.last_week_id = week.id
+        db.session.commit()
+        return weeks
+    
 class LastView(Resource):
     @login_required
     def get(self):
@@ -210,6 +226,7 @@ class DeleteWeek(Resource):
     
 api.add_resource(CreateWeek, '/api/week/create/')
 api.add_resource(ViewWeek, '/api/weeks/<int:week_id>/')
+api.add_resource(ViewWeekAll, '/api/weeks/all/')
 api.add_resource(LastView, '/api/weeks/last/')
 api.add_resource(DeleteWeek, '/api/weeks/<int:week_id>/')
 
