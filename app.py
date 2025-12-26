@@ -253,8 +253,31 @@ class CreateTask(Resource):
         db.session.add(task)
         db.session.commit()
         return task, 201
+    
+class SetTaskTime(Resource):
+    @login_required
+    @marshal_with(taskFields)
+    def patch(self, task_id):
+        # Set start time and end time for a task
+        task_time_args = reqparse.RequestParser()
+        task_time_args.add_argument('start_time', type=str, required=True, help="Start time is required")
+        task_time_args.add_argument('end_time', type=str, required=True, help="End time is required")
+                
+        user_id = session.get('user_id')
+        args = task_time_args.parse_args()
+        task = TaskModel.query.filter_by(id=task_id, user_id=user_id).first()
+        if not task:
+            abort(404, message="Task not found")
+        try:
+            task.start_time = datetime.fromisoformat(args['start_time'])
+            task.end_time = datetime.fromisoformat(args['end_time'])
+        except ValueError:
+            abort(400, message="Invalid datetime format")
+        db.session.commit()
+        return task        
 
 api.add_resource(CreateTask, '/api/task/create')
+api.add_resource(SetTaskTime, '/api/task/<int:task_id>/time')
 
 # -------------------
 #  Call the Program

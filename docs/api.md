@@ -43,6 +43,7 @@ GET /api/weeks/last
 - Get the last week the user has ever viewed
 
 DELETE /api/weeks/delete
+- Delete a week
 
 ## Tasks
 
@@ -57,19 +58,30 @@ POST /api/task/create
         "week_id":"1"
     }
 
-PUT /api/task/time
+PATCH /api/task/<task_id>/time
+- Add the start time and end time of a task
+    ```json
+    {
+        "start_time":"2025-12-29T12:00:00",
+        "end_time":"2025-12-29T13:00:00"
+    }
 
 GET /api/tasks/<task_id>
+- Get a certain task
 
 GET /api/weeks/<week_id>/tasks
 - Get tasks for a week
 
 DELETE /api/tasks/<task_id>
+- Delete a task
 
-## Category
+## Categories
 
 POST /api/category/create
+- Add a category
 
 GET /api/categories/<category_id>
+- Get info of a category
 
 DELETE /api/categories/<category_id>
+- Delete a category
