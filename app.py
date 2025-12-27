@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, session
+from flask import Flask, session, render_template
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
@@ -459,6 +459,23 @@ api.add_resource(CreateCategory, '/api/category/create/')
 api.add_resource(ViewCategory, '/api/categories/<int:category_id>/')
 api.add_resource(ViewAllCategory, '/api/categories/all/')
 api.add_resource(DeleteCategory, '/api/categories/<int:category_id>/<int:destination_id>/')
+
+# --------
+#  Routes
+# --------
+
+@app.route("/register", endpoint="register_page")
+def register():
+    return render_template("register.html", page="register")
+
+@app.route("/login", endpoint="login_page")
+def login():
+    return render_template("login.html", page="login")
+
+@app.route("/", endpoint="home_page")
+def index():
+    return render_template("index.html", page="home")
+
 
 # -------------------
 #  Call the Program

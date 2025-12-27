@@ -1,11 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>TODO</title>
-    </head>
-    <body>
-        body
-    </body>
-</html>
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- 左侧周选择侧栏 -->
+    <aside class="sidebar">
+        <h3>Weeks</h3>
+        <ul id="week-list">
+            <!-- JS 会动态填充周列表 -->
+            <li>Week 1</li>
+            <li>Week 2</li>
+            <li>Week 3</li>
+        </ul>
+    </aside>
+
+    <!-- 右侧 TODO 内容 -->
+    <main class="todo-content">
+        <h3>Todos</h3>
+        <div id="todo-list">
+            <!-- JS 占位示例 -->
+            <script>
+                const todos = [
+                    { id: 1, title: "Sample Todo 1", completed: false },
+                    { id: 2, title: "Sample Todo 2", completed: true }
+                ];
+            </script>
+        </div>
+    </main>
+</div>
+
+{% endblock %}

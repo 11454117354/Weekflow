@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">OutOfCircle</a>
+        <ul class="nav-menu">
+            {% if page == 'register' %}
+                <!-- 注册页 navbar 可以空，也可以只显示 logo -->
+            {% elif page == 'login' %}
+                <li><a href="/register">Register</a></li>
+            {% elif page == 'home' %}
+                <li><a href="/weeks">Weeks</a></li>
+                <li><a href="/categories">Categories</a></li>
+                <li><span id="username" class="nav-username"></span></li>
+                <li><a id="logout" href="/logout">Logout</a></li>
+            {% else %}
+                <!-- 默认显示 login/register -->
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Main content -->
+<main class="main-content">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<script>
+    (async () => {
+        try {
+            const response = await fetch("/api/me/", {credentials: "same-origin"});
+            if (response.ok){
+                const username = await response.json()
+                document.getElementById("username").innerText = username.username;
+            } else {
+                const path = window.location.pathname;
+                if (path !== "/login" && path !== "/register") {
+                    window.location.href = "/login";
+                }
+            }
+        } catch(e) {
+            console.error(e);
+            const path = window.location.pathname;
+            if (path !== "/login" && path !== "/register") {
+                window.location.href = "/login";
+            }
+        }
+    })();
+    
+    document.getElementById("logout").addEventListener("click", async (e) =>{
+        e.preventDefault();
+
+        try {
+            const response = await fetch("/api/logout/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "same-origin",
+            });
+
+            const data = await response.json()
+
+            if (response.ok) {
+                window.location.href = "/login";
+            }
+        } catch (error) {
+            console.error(e);
+            window.location.href = "/login"
+        }
+    });
+</script>
+
+</body>
+</html>

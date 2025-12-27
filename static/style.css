@@ -1,0 +1,181 @@
+/* Reset一些默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2274F8;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: white;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-menu li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-menu li a:hover {
+    color: #A3C1FF;
+}
+
+/* Main content */
+.main-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* 表单基础样式 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #F5F5F5;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+}
+
+input, select, textarea, button {
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #2274F8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #1258C1;
+}
+
+/* 小屏幕响应式 */
+@media (max-width: 600px) {
+    .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Container 左右布局 */
+.container {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem;
+    width: calc(100vw - 4rem); /* 横向间距预留 */
+    max-width: 100%;           /* 防止超出屏幕 */
+}
+
+
+/* 左侧 sidebar */
+.sidebar {
+    flex: 0 0 250px;            /* 固定最小宽度 250px，可根据需要调整 */
+    background-color: #F0F0F0;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    min-height: 80vh;           /* 高度占屏幕大部分 */
+}
+
+.sidebar h3 {
+    margin-bottom: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sidebar ul li:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+/* 右侧 TODO 内容 */
+.todo-content {
+    flex: 1;                    /* 占据剩余空间 */
+    background-color: #F9F9F9;
+    padding: 1rem;
+    border-radius: 8px;
+    min-height: 80vh;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 每条 todo 项 */
+#todo-list .todo-item {
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 左右布局在小屏幕下自适应 */
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+.nav-username {
+    font-weight: bold;
+    color: #fff;
+    background-color: #2274F8;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.nav-username::before {
+    content: "|";              /* 显示竖线 */
+    color: #fff;               /* 颜色与字体或 navbar 统一 */
+    margin-right: 0.5rem;      /* 竖线和用户名间距 */
+}
