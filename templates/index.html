@@ -66,17 +66,45 @@
 
     <!-- 右侧 TODO 内容 -->
     <main class="todo-content">
-        <h3>Todos</h3>
-        <div id="todo-list">
-            <!-- JS 占位示例 -->
-            <script>
-                const todos = [
-                    { id: 1, title: "Sample Todo 1", completed: false },
-                    { id: 2, title: "Sample Todo 2", completed: true }
-                ];
-            </script>
+        <h3 id="todo-title">Todos</h3>
+
+        <div id="todo-list"></div>
+
+        <div class="todo-footer">
+            <button id="add-task-btn">Add New Task</button>
         </div>
     </main>
+</div>
+
+<div id="task-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3 id="task-modal-title">Add Task</h3>
+
+        <label>
+            <span>Title</span>
+            <input type="text" id="task-title">
+        </label>
+
+        <label>
+            <span>DDL</span>
+            <input type="datetime-local" id="task-ddl">
+        </label>
+
+        <label>
+            <span>Category</span>
+            <select id="task-category"></select>
+        </label>
+
+        <label>
+            <span>Remark</span>
+            <textarea id="task-remark"></textarea>
+        </label>
+
+        <div class="actions">
+            <button type="button" id="task-cancel">Cancel</button>
+            <button type="button" id="task-confirm">Confirm</button>
+        </div>
+    </div>
 </div>
 
 <script src="{{ url_for('static', filename='index.js') }}"></script>

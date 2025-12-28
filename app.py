@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from flask import Flask, session, render_template
 from flask_session import Session
@@ -11,8 +12,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 #  Boomer
 # --------
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'database.db')
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
