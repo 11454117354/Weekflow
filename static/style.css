@@ -168,9 +168,33 @@ button:hover {
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.modal-content label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-content label > span {
+  width: 90px;   /* 统一标签宽度 */
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.actions button {
+  min-width: 100px;
 }
 
 /* 右侧 TODO 内容 */
