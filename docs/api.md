@@ -52,6 +52,15 @@ PATCH /api/weeks/<week_id>/rename
         "name": "week3"
     }
 
+PATCH /api/weeks/<week_id>/edit
+- Edit week
+    ```json
+    {
+        "name": "week3",
+        "start_time": "2025-12-26T15:30:00",
+        "end_time": "2025-12-26T16:30:00"
+    }
+
 PATCH /api/weeks/<week_id>/archived
 - Get the week archived
     ```json

@@ -197,6 +197,36 @@ button:hover {
   min-width: 100px;
 }
 
+.week-item {
+  display: flex;
+  justify-content: space-between; /* 左右两端对齐 */
+  align-items: center;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.rename-btn {
+  background: none;       /* 去掉背景 */
+  border-radius: 4px;           /* 可选圆角 */
+  padding: 2px 6px;            /* 去掉内边距 */
+  margin: 0 4px 0 0;              /* 去掉外边距 */
+  cursor: pointer;
+  font-size: 0.9rem;      /* 调整大小，让按钮不要太大 */
+  color: #000000;         /* 可选颜色 */
+  opacity: 0;             /* 默认隐藏 */
+  transition: opacity 0.2s, background-color 0.2s, border 0.2s;
+}
+
+.rename-btn:hover {
+  background-color: #4e5fff;   /* 正方形背景颜色 */
+  border-radius: 4px;           /* 可选圆角 */
+  padding: 2px 6px;             /* 调整按钮内边距让它变成小正方形 */
+}
+
+.week-item:hover .rename-btn {
+  opacity: 1;             /* hover 时显示 */
+}
+
 /* 右侧 TODO 内容 */
 .todo-content {
     flex: 1;                    /* 占据剩余空间 */
@@ -234,7 +264,7 @@ button:hover {
 .nav-username {
     font-weight: bold;
     color: #fff;
-    background-color: #2274F8;
+    background-color: rgb(46, 46, 255);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
 }

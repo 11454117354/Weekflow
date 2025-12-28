@@ -211,6 +211,21 @@ class LastView(Resource):
             abort(404, message="not found")
         return {"last_week_id": user.last_week_id}
     
+class WeekEdit(Resource):
+    @login_required
+    def patch(self, week_id):
+        # Get the week edited
+        user_id = session.get('user_id')
+        week = WeekModel.query.filter_by(id=week_id, user_id=user_id).first()
+        if not week:
+            abort(404, message="Week not found")
+        args = week_args.parse_args()
+        week.name = args['name']
+        week.start_time = args['start_time']
+        week.end_time = args['end_time']
+        db.session.commit()
+        return {"message": "Edit successful"}
+    
 class WeekRename(Resource):
     @login_required
     def patch(self, week_id):
@@ -225,7 +240,7 @@ class WeekRename(Resource):
         week.name = args['name']
         db.session.commit()
         return {"message": "Rename successful"}
-    
+
 class WeekArchive(Resource):
     @login_required
     def patch(self, week_id):
@@ -267,8 +282,9 @@ api.add_resource(ViewWeek, '/api/weeks/<int:week_id>/')
 api.add_resource(ViewWeekAll, '/api/weeks/all/')
 api.add_resource(LastView, '/api/weeks/last/')
 api.add_resource(DeleteWeek, '/api/weeks/<int:week_id>/')
-api.add_resource(WeekArchive, '/api/weeks/<int:week_id>/archived')
-api.add_resource(WeekRename, '/api/weeks/<int:week_id>/rename')
+api.add_resource(WeekArchive, '/api/weeks/<int:week_id>/archived/')
+api.add_resource(WeekRename, '/api/weeks/<int:week_id>/rename/')
+api.add_resource(WeekEdit, '/api/weeks/<int:week_id>/edit/')
 
 # ------------
 #  Task Part
@@ -512,7 +528,7 @@ def register():
 def login():
     return render_template("login.html", page="login")
 
-@app.route("/", endpoint="home_page")
+@app.route("/", endpoint="home_page", methods=["GET", "POST", "PATCH", "DELETE"])
 def index():
     return render_template("index.html", page="home")
 

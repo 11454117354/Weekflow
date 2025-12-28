@@ -15,6 +15,23 @@
             <button type="submit">Add New Week</button>
         </form>
 
+        <!-- Rename弹窗模板 -->
+        <div id="week-popup-template" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h3>Rename Week</h3>
+
+                <label>
+                    <span>Week Name</span>
+                    <input type="text" class="popup-weekname" required>
+                </label>
+
+                <div class="actions">
+                    <button type="button" class="popup-cancel">Cancel</button>
+                    <button type="button" class="popup-confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 新建week弹窗 -->
         <div id="modal" class="modal">
             <div class="modal-content">

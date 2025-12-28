@@ -13,8 +13,72 @@
 
         weeks.forEach(week => {
             const li = document.createElement("li");
-            li.innerText = week.name
+            li.classList.add("week-item");
             li.dataset.weekId = week.id;
+
+            const nameSpan = document.createElement("span");
+            nameSpan.innerText = week.name;
+
+            const renameBtn = document.createElement("button");
+            renameBtn.innerText = "R";
+            renameBtn.classList.add("rename-btn");
+
+            renameBtn.addEventListener("click", e => {
+                e.stopPropagation();
+                const template = document.getElementById("week-popup-template");
+                const popup = template.cloneNode(true);
+                popup.id = "";
+                popup.style.display = "flex";
+                document.body.appendChild(popup);
+
+                const cancelBtn = popup.querySelector(".popup-cancel");
+                const confirmBtn = popup.querySelector(".popup-confirm");
+                const nameInput = popup.querySelector(".popup-weekname");
+                
+                nameInput.value = week.name;
+
+                cancelBtn.addEventListener("click", () => {
+                    popup.remove();
+                });
+
+                confirmBtn.addEventListener("click", async () => {
+                    const newName = nameInput.value.trim();
+                    
+                    if (!newName){
+                        alert("Please fill in all fields");
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/api/weeks/${week.id}/rename/`, {
+                            method: "PATCH",
+                            credentials: "same-origin",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify({ name: newName })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Failed to rename week")
+                        }
+
+                        // modal.classList.remove("show");
+
+                        location.reload();
+                    } catch (error) {
+                        console.error(error);
+                        alert("Error renaming week");
+                    }
+                    console.log("submit new week name", week.id);
+
+                    popup.remove();
+                });
+
+                console.log("rename week", week.id);
+            })
+
+            li.appendChild(nameSpan);
+            li.appendChild(renameBtn);
+
             weeklist.appendChild(li);
         });
     } catch (error) {
