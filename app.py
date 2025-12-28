@@ -44,9 +44,10 @@ class UserModel(db.Model):
     
 class WeekModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=True) # Can be null
+    name = db.Column(db.String(80), nullable=False) # Can be null
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
+    archived = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
 
 class TaskModel(db.Model):
@@ -139,12 +140,14 @@ week_args = reqparse.RequestParser()
 week_args.add_argument('name', type=str, required=False, help="The name of the week")
 week_args.add_argument('start_time', type=str, required=True, help="Start time cannot be blank")
 week_args.add_argument('end_time', type=str, required=True, help="End time cannot be blank")
+week_args.add_argument('archived', type=bool, required=False, help="Default: not archived")
 
 weekFields = {
     'id': fields.Integer,
     'name': fields.String,
     'start_time': fields.String,
-    'end_time': fields.String
+    'end_time': fields.String,
+    'archived': fields.Boolean
 }
 
 class CreateWeek(Resource):
@@ -207,6 +210,24 @@ class LastView(Resource):
             # return {"last_week_id": None}
             abort(404, message="not found")
         return {"last_week_id": user.last_week_id}
+    
+class WeekArchive(Resource):
+    @login_required
+    def patch(self, week_id):
+        # Get the week archived
+        user_id = session.get('user_id')
+        week = WeekModel.query.filter_by(id=week_id, user_id=user_id).first()
+        if not week:
+            abort(404, message="Week not found")
+        args = week_args.parse_args()
+        if args['archived'] == False:
+            week.archived = False
+            db.session.commit()
+            return {"message": "Unarchive successful"}
+        elif args['archived'] == True:
+            week.archived = True
+            db.session.commit()
+            return {"message": "Archive successful"}
     
 class DeleteWeek(Resource):
     @login_required

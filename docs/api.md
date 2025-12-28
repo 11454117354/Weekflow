@@ -42,9 +42,10 @@ GET /api/weeks/<week_id>
 GET /api/weeks/all
 - Get all weeks name and info
 
-
 GET /api/weeks/last
 - Get the last week the user has ever viewed
+
+PATCH /api/weeks/<week_id>/archived
 
 DELETE /api/weeks/<week_id>
 - Delete a week
