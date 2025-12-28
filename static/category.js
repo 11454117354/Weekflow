@@ -81,32 +81,60 @@
             deleteBtn.addEventListener("click", async e => {
                 e.stopPropagation();
 
-                const choice = confirm(
-                    "OK: delete category and ALL tasks\nCancel: move tasks to another category"
-                );
+                // clone modal
+                const template = document.getElementById("delete-category-modal-template");
+                const modal = template.cloneNode(true);
+                modal.id = "";
+                modal.style.display = "flex";
+                document.body.appendChild(modal);
 
-                let destinationId = -1;
+                const cancelBtn = modal.querySelector(".popup-cancel");
+                const confirmBtn = modal.querySelector(".popup-confirm");
+                const radioDelete = modal.querySelector('input[value="delete"]');
+                const radioMove = modal.querySelector('input[value="move"]');
+                const moveLabel = modal.querySelector("#move-category-label");
+                const select = modal.querySelector("#destination-category-select");
 
-                if (!choice) {
-                    const target = prompt("Enter destination category ID");
-                    if (!target) return;
-                    destinationId = target;
-                }
+                // 填充下拉菜单
+                select.innerHTML = "";
+                categories.forEach(c => {
+                    if (c.id !== category.id) {
+                        const option = document.createElement("option");
+                        option.value = c.id;
+                        option.innerText = c.name;
+                        select.appendChild(option);
+                    }
+                });
 
-                try {
-                    const response = await fetch(
-                        `/api/categories/${category.id}/${destinationId}`,
-                        {
+                // 切换显示下拉
+                radioDelete.addEventListener("change", () => {
+                    moveLabel.style.display = "none";
+                });
+                radioMove.addEventListener("change", () => {
+                    moveLabel.style.display = "block";
+                });
+
+                cancelBtn.onclick = () => modal.remove();
+
+                confirmBtn.onclick = async () => {
+                    let destination_id = 0; // 默认删除所有 tasks
+                    if (radioMove.checked) {
+                        destination_id = parseInt(select.value);
+                    }
+
+                    try {
+                        const response = await fetch(`/api/categories/${category.id}/${destination_id}`, {
                             method: "DELETE",
                             credentials: "same-origin"
-                        }
-                    );
+                        });
 
-                    if (!response.ok) throw new Error();
-                    li.remove();
-                } catch {
-                    alert("Error deleting category");
-                }
+                        if (!response.ok) throw new Error();
+                        modal.remove();
+                        li.remove();
+                    } catch {
+                        alert("Error deleting category");
+                    }
+                };
             });
 
             li.appendChild(nameSpan);

@@ -37,6 +37,33 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Delete Category Modal -->
+        <div id="delete-category-modal-template" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h3 id="delete-modal-title">Delete Category</h3>
+                <p>Choose what to do with tasks in this category:</p>
+
+                <label>
+                    <input type="radio" name="deleteOption" value="delete" checked>
+                    Delete all tasks
+                </label>
+                <label>
+                    <input type="radio" name="deleteOption" value="move">
+                    Move tasks to another category
+                </label>
+
+                <label id="move-category-label" style="display:none;">
+                    Destination Category
+                    <select id="destination-category-select"></select>
+                </label>
+
+                <div class="actions">
+                    <button type="button" class="popup-cancel">Cancel</button>
+                    <button type="button" class="popup-confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 
