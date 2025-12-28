@@ -365,7 +365,6 @@ class EditTask(Resource):
         task = TaskModel.query.filter_by(id=task_id, user_id=user_id).first()
         task.title = args['title']
         task.ddl = ddl
-        task.finished = args['finished']
         task.category_id = args['category_id']
         task.remark = args['remark']
         db.session.commit()
