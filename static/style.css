@@ -205,7 +205,15 @@ button:hover {
   position: relative;
 }
 
-.rename-btn {
+.week-item .rename-btn {
+    margin-left: auto;
+}
+
+.week-item .delete-btn {
+    margin-left: 4px; /* 控制间距 */
+}
+
+.rename-btn, .delete-btn {
   background: none;       /* 去掉背景 */
   border-radius: 4px;           /* 可选圆角 */
   padding: 2px 6px;            /* 去掉内边距 */
@@ -218,14 +226,22 @@ button:hover {
 }
 
 .rename-btn:hover {
-  background-color: #4e5fff;   /* 正方形背景颜色 */
-  border-radius: 4px;           /* 可选圆角 */
-  padding: 2px 6px;             /* 调整按钮内边距让它变成小正方形 */
+    background-color: #4e5fff;   /* 正方形背景颜色 */
+    border-radius: 4px;           /* 可选圆角 */
+    padding: 2px 6px; 
 }
 
-.week-item:hover .rename-btn {
+.delete-btn:hover {
+    background-color: #ff4040;   /* 正方形背景颜色 */
+    border-radius: 4px;           /* 可选圆角 */
+    padding: 2px 6px;             /* 调整按钮内边距让它变成小正方形 */
+}
+
+.week-item:hover .rename-btn,
+.week-item:hover .delete-btn  {
   opacity: 1;             /* hover 时显示 */
 }
+
 
 /* 右侧 TODO 内容 */
 .todo-content {

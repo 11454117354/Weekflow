@@ -21,7 +21,11 @@
 
             const renameBtn = document.createElement("button");
             renameBtn.innerText = "R";
-            renameBtn.classList.add("rename-btn");
+            renameBtn.classList.add("rename-btn", "button-group");
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "D";
+            deleteBtn.classList.add("delete-btn", "button-group");
 
             renameBtn.addEventListener("click", e => {
                 e.stopPropagation();
@@ -34,7 +38,7 @@
                 const cancelBtn = popup.querySelector(".popup-cancel");
                 const confirmBtn = popup.querySelector(".popup-confirm");
                 const nameInput = popup.querySelector(".popup-weekname");
-                
+
                 nameInput.value = week.name;
 
                 cancelBtn.addEventListener("click", () => {
@@ -76,8 +80,31 @@
                 console.log("rename week", week.id);
             })
 
+            deleteBtn.addEventListener("click", async e => {
+                e.stopPropagation();
+
+                if (!confirm("Are you sure to delete this week(with all tasks inside deleted)?")) return;
+
+                try {
+                    const response = await fetch(`/api/weeks/${week.id}/`, {
+                        method: "DELETE",
+                        credentials: "same-origin",
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to delete week")
+                    }
+
+                    li.remove();
+                } catch (error) {
+                    console.error(error);
+                    alert("Error deleting week");
+                }
+            })
+
             li.appendChild(nameSpan);
             li.appendChild(renameBtn);
+            li.appendChild(deleteBtn);
 
             weeklist.appendChild(li);
         });
