@@ -10,6 +10,7 @@ Flask-RESTful==0.3.10
 Flask-Session==0.8.0
 Flask-SQLAlchemy==3.1.1
 fonttools==4.60.1
+gunicorn==23.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
 kiwisolver==1.4.9
